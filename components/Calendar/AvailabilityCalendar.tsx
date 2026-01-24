@@ -69,6 +69,9 @@ export const AvailabilityCalendar: React.FC = () => {
         <div className="h-[400px] md:h-[600px]">
           {/* 26년도 7월 22일 이후부터는 disabled */}
           <Calendar
+             components={{
+              toolbar: CustomToolbar
+             }}
             localizer={localizer}
             events={events}
             startAccessor="start"
@@ -93,6 +96,8 @@ export const AvailabilityCalendar: React.FC = () => {
               noEventsInRange: "이 기간에는 예약이 없습니다",
               showMore: (total) => `+${total} 더보기`,
             }}
+            // monthHeaderFormat css 커스텀
+            
             formats={{
               monthHeaderFormat: (date) => format(date, 'yyyy년 M월', { locale: ko }),
               dayHeaderFormat: (date) => format(date, 'M월 d일 (E)', { locale: ko }),
@@ -105,3 +110,28 @@ export const AvailabilityCalendar: React.FC = () => {
     </div>
   );
 };
+
+
+function CustomToolbar({ label, onNavigate }) {
+  return (
+    <div className="rbc-toolbar flex items-center justify-center gap-4 mb-4">
+      <button
+        onClick={() => onNavigate("PREV")}
+        className="p-2 rounded-full hover:bg-gray-100 transition"
+      >
+        ◀
+      </button>
+
+      <span className="text-xl font-semibold">
+        {format(new Date(label), "yyyy년 M월", { locale: ko })}
+      </span>
+
+      <button
+        onClick={() => onNavigate("NEXT")}
+        className="p-2 rounded-full hover:bg-gray-100 transition"
+      >
+        ▶
+      </button>
+    </div>
+  );
+}
