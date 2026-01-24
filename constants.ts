@@ -33,9 +33,12 @@ export const SITE_INFO = {
   // 28박이상 17% (평균 2,600,000원)
   
   pricing: [
-    { period: "6박7일 (1주)", airbnb: 680000, direct: 600000, discount: "약 10%" },
-    { period: "13박14일 (2주)", airbnb: 1250000, direct: 1050000, discount: "약 16%" },
-    { period: "27박28일 (한달)", airbnb: 2400000, direct: 1680000, discount: "30% 할인" }
+    // { period: "6박7일", airbnb: 680000, direct: 600000, discount: "약 10%" },
+    // { period: "13박14일", airbnb: 1250000, direct: 1050000, discount: "약 16%" },
+    // { period: "27박28일", airbnb: 2400000, direct: 1680000, discount: "30% 할인" }
+    { period: "6박7일", airbnb: 680000, direct: 610000, discount: "10%" },
+    { period: "13박14일", airbnb: 1480000, direct: 1290000, discount: "13%" },
+    { period: "27박28일", airbnb: 3020000, direct: 2300000, discount: "24%" }
   ],
   calendar: {
     icalUrl: "/api/ical", // Vercel Serverless Function 엔드포인트

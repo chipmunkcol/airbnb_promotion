@@ -3,6 +3,14 @@ import React from 'react';
 import { SITE_INFO } from '../constants';
 
 export const Hero: React.FC = () => {
+  // 직거래 하면 에어비앤비보다 저렴하다는 confirm 창
+  const handleDirectTradeClick = () => {
+    if (confirm("직거래 하면 에어비앤비보다 최소 10% 저렴합니다. 그래도 에어비앤비로 예약 진행하시겠습니까?")) {
+      // 새 창으로 에어비앤비 페이지 열기
+      window.open(SITE_INFO.airbnbUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
       <div 
@@ -21,19 +29,21 @@ export const Hero: React.FC = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          
           <a 
-            href={SITE_INFO.airbnbUrl}
+            href="#inquiry"
+            className="px-8 py-4 bg-gradient-to-br from-emerald-500 to-teal-700 hover:to-teal-800 backdrop-blur-md text-white  rounded-full font-bold text-lg transition-all"
+          >
+            장기 숙박 직거래 문의
+          </a>
+          <a 
+            onClick={handleDirectTradeClick}
+            // href={SITE_INFO.airbnbUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 bg-rose-500 hover:bg-rose-600 text-white rounded-full font-bold text-lg transition-all shadow-lg hover:shadow-rose-500/30"
           >
             에어비엔비 예약하기
-          </a>
-          <a 
-            href="#inquiry"
-            className="px-8 py-4 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white border border-white/50 rounded-full font-bold text-lg transition-all"
-          >
-            장기 숙박 직거래 문의
           </a>
         </div>
       </div>

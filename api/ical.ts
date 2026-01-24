@@ -8,6 +8,7 @@ export default async function handler(
   const icalUrl = process.env.VITE_AIRBNB_ICAL_URL || process.env.AIRBNB_ICAL_URL;
 
   if (!icalUrl) {
+    console.error('iCal URL is not configured in environment variables.', icalUrl);
     return res.status(500).json({ error: 'iCal URL not configured' });
   }
 
