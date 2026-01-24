@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { SITE_INFO } from '../constants';
+import { AvailabilityCalendar } from './Calendar/AvailabilityCalendar';
 
 export const Inquiry: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -30,6 +31,17 @@ export const Inquiry: React.FC = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">장기 숙박 가격 비교</h2>
           <p className="text-gray-600">에어비엔비 수수료를 덜어내고 합리적인 가격으로 모십니다.</p>
+        </div>
+
+        {/* 실시간 예약 현황 달력 */}
+        <div className="mb-16">
+          <h3 className="text-2xl font-bold text-gray-800 text-center mb-6">
+            실시간 예약 현황
+          </h3>
+          <AvailabilityCalendar />
+          <p className="text-sm text-gray-500 text-center mt-4">
+            * 회색으로 표시된 날짜는 이미 예약된 기간입니다.
+          </p>
         </div>
 
         {/* Price Table */}

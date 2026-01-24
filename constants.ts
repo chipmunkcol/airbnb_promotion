@@ -28,11 +28,19 @@ export const SITE_INFO = {
     baths: 1
   },
   // 예시 가격 데이터 (실제 가격에 맞춰 수정 가능)
+  // 1박당 89000원 기준 (주말 요금 148000원)
+  // 7박이상 10% (평균 667,000원)
+  // 28박이상 17% (평균 2,600,000원)
+  
   pricing: [
     { period: "6박7일 (1주)", airbnb: 680000, direct: 600000, discount: "약 10%" },
     { period: "13박14일 (2주)", airbnb: 1250000, direct: 1050000, discount: "약 16%" },
     { period: "27박28일 (한달)", airbnb: 2400000, direct: 1680000, discount: "30% 할인" }
-  ]
+  ],
+  calendar: {
+    icalUrl: "/api/ical", // Vercel Serverless Function 엔드포인트
+    cacheDuration: 60 * 60 * 1000, // 1시간 캐싱 (밀리초)
+  }
 };
 
 // public/assets 폴더 내 이미지 경로
