@@ -99,10 +99,34 @@ export const AvailabilityCalendar: React.FC = () => {
             // monthHeaderFormat css 커스텀
             
             formats={{
-              monthHeaderFormat: (date) => format(date, 'yyyy년 M월', { locale: ko }),
-              dayHeaderFormat: (date) => format(date, 'M월 d일 (E)', { locale: ko }),
-              dayRangeHeaderFormat: ({ start, end }) =>
-                `${format(start, 'M월 d일', { locale: ko })} - ${format(end, 'M월 d일', { locale: ko })}`,
+              monthHeaderFormat: (date) => {
+                try {
+                  const d = date instanceof Date ? date : new Date(date);
+                  return isNaN(d.getTime()) ? '' : format(d, 'yyyy년 M월', { locale: ko });
+                } catch {
+                  return '';
+                }
+              },
+              dayHeaderFormat: (date) => {
+                try {
+                  const d = date instanceof Date ? date : new Date(date);
+                  return isNaN(d.getTime()) ? '' : format(d, 'M월 d일 (E)', { locale: ko });
+                } catch {
+                  return '';
+                }
+              },
+              dayRangeHeaderFormat: ({ start, end }) => {
+                try {
+                  const startDate = start instanceof Date ? start : new Date(start);
+                  const endDate = end instanceof Date ? end : new Date(end);
+                  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                    return '';
+                  }
+                  return `${format(startDate, 'M월 d일', { locale: ko })} - ${format(endDate, 'M월 d일', { locale: ko })}`;
+                } catch {
+                  return '';
+                }
+              },
             }}
           />
         </div>
@@ -112,7 +136,31 @@ export const AvailabilityCalendar: React.FC = () => {
 };
 
 
-function CustomToolbar({ label, onNavigate }) {
+interface CustomToolbarProps {
+  label: string | Date;
+  onNavigate: (action: 'PREV' | 'NEXT' | 'TODAY') => void;
+}
+
+function CustomToolbar({ label, onNavigate }: CustomToolbarProps) {
+  // label을 안전하게 Date 객체로 변환
+  const getDateFromLabel = (label: string | Date): Date => {
+    if (label instanceof Date) {
+      return isNaN(label.getTime()) ? new Date() : label;
+    }
+    
+    if (typeof label === 'string') {
+      const date = new Date(label);
+      if (!isNaN(date.getTime())) {
+        return date;
+      }
+    }
+    
+    // 기본값으로 현재 날짜 반환
+    return new Date();
+  };
+
+  const displayDate = getDateFromLabel(label);
+
   return (
     <div className="rbc-toolbar flex items-center justify-center gap-4 mb-4">
       <button
@@ -123,7 +171,7 @@ function CustomToolbar({ label, onNavigate }) {
       </button>
 
       <span className="text-xl font-semibold">
-        {format(new Date(label), "yyyy년 M월", { locale: ko })}
+        {format(displayDate, "yyyy년 M월", { locale: ko })}
       </span>
 
       <button

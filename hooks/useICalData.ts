@@ -32,12 +32,25 @@ export function useICalData() {
 
           // 캐시가 유효하면 사용
           if (cacheAge < SITE_INFO.calendar.cacheDuration) {
-            // 날짜 문자열을 Date 객체로 변환
-            const eventsWithDates = cachedData.events.map(event => ({
-              ...event,
-              start: new Date(event.start),
-              end: new Date(event.end),
-            }));
+            // 날짜 문자열을 Date 객체로 변환 (안전한 변환)
+            const eventsWithDates = cachedData.events
+              .map(event => {
+                const startDate = new Date(event.start);
+                const endDate = new Date(event.end);
+                
+                // 유효한 날짜인지 확인
+                if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                  console.warn('Invalid date found in cache, skipping event:', event);
+                  return null;
+                }
+                
+                return {
+                  ...event,
+                  start: startDate,
+                  end: endDate,
+                };
+              })
+              .filter((event): event is CalendarEvent => event !== null);
 
             if (isMounted) {
               setState({
@@ -66,18 +79,34 @@ export function useICalData() {
         const vevents = comp.getAllSubcomponents('vevent');
 
         // 4. CalendarEvent 형식으로 변환
-        const events: CalendarEvent[] = vevents.map((vevent) => {
-          const event = new ICAL.Event(vevent);
-          return {
-            id: event.uid,
-            title: event.summary || '예약됨',
-            start: event.startDate.toJSDate(),
-            end: event.endDate.toJSDate(),
-            resource: {
-              isBooked: true,
-            },
-          };
-        });
+        const events: CalendarEvent[] = vevents
+          .map((vevent) => {
+            try {
+              const event = new ICAL.Event(vevent);
+              const startDate = event.startDate.toJSDate();
+              const endDate = event.endDate.toJSDate();
+              
+              // 유효한 날짜인지 확인
+              if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                console.warn('Invalid date found in iCal event, skipping:', event.uid);
+                return null;
+              }
+              
+              return {
+                id: event.uid,
+                title: event.summary || '예약됨',
+                start: startDate,
+                end: endDate,
+                resource: {
+                  isBooked: true,
+                },
+              };
+            } catch (error) {
+              console.warn('Error parsing iCal event:', error);
+              return null;
+            }
+          })
+          .filter((event): event is CalendarEvent => event !== null);
 
         // 5. localStorage에 캐시 저장
         const cacheData: CachedData = {
